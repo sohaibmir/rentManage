@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+            
+
+<!-- NATIVE ANDROID STYLE STARTS HERE -->
+        <link rel="stylesheet" href="css/jquery-ui.css"> 
+        <link rel="stylesheet" href="css/font-awesome.min.css" />
+       <!-- <link rel="stylesheet" href="js/css/jquery.mobile-1.4.2.css" /> -->
+        <link rel="stylesheet" href="css/jquerymobile.css" />
+        <link rel="stylesheet" href="css/jquerymobile.nativedroid.css" />
+        <link rel="stylesheet" href="css/jquerymobile.nativedroid.light.css"  id='jQMnDTheme' />
+        <link rel="stylesheet" href="css/jquerymobile.nativedroid.color.green.css" id='jQMnDColor' />
+        
+
+       
+        <script type="text/javascript" src="js/cordova.js"></script>
+        <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+        <script type="text/javascript" src="js/jquery.mobile-1.3.1.js"></script>
+        <script src="js/jquery-ui.js"></script>
+    
+
+        <script type="text/javascript">
+            $(document).bind("mobileinit", function(){
+                $.mobile.pushStateEnabled = false;
+            });
+        </script>  
+
+        <script type="text/javascript" src="js/db.js"></script>
+
+        <script type="text/javascript">
+         //GLOBAL VARIABLES
+        var db;
+
+        document.addEventListener("deviceready", onDeviceReady, false);   
+
+
+        function onDeviceReady() {
+            //alert("PhoneGap is ready!");
+         db = window.openDatabase("rentManag", "3.7.11", "Rent Manag", 100000000);
+         db.transaction(createTable, errorCB, listAllKeepers);
+
+         document.addEventListener("backbutton", onBackKeyDown, false);
+       
+ 
+            // Setting default page transition to slide
+            $.mobile.defaultPageTransition = 'none';
+
+        }
+
+        function onBackKeyDown(){
+            if($.mobile.activePage.is('#keeperListPage')){
+             //  e.preventDefault();
+             navigator.app.exitApp();
+            }
+
+            if($.mobile.activePage.is('#keeperForm')){
+                $.mobile.changePage('#keeperListPage');
+            }
+/*
+            if($.mobile.activePage.is('#viewKeeperDetailedInfo')){
+                $.mobile.changePage('#keeperListPage');
+            }
+
+            if($.mobile.activePage.is('#editKeeperForm')){
+                $.mobile.changePage('#viewKeeperDetailedInfo');
+            }
+            */
+        }
+
+      
+        
+        </script>
+       
+
+   </head>
+    <body>
+        
+    <div data-role="page" data-theme='b' id="keeperListPage"> 
+  <!--  <div data-role='panel' id='mypanel' data-theme='b'></div> -->
+    
+   <script type="text/javascript">
+  //  $(document).on('pagebeforeshow', '#keeperListPage', function () {
+   //     alert("please fire");
+   //     listAllKeepers();
+  //  }
+ 
+    </script> 
+
+        <!-- HEADER -->
+        <div data-role="header" data-position="fixed" data-tap-toggle="false" data-theme='b'>
+            <h1>Rent Management</h1>
+            <a href="#" target='_blank'><i class='icon-home' style="float:left;"></i></a>
+        </div>
+        <!-- HEADER END HERE -->
+        <!--CONTENT -->
+        <div data-role="content">   
+
+            <ul data-role="listview" data-inset="false" data-icon="false" data-divider-theme="b">
+                <li data-role="list-divider">Keepers List</li>
+                    <ul data-role="listview" data-inset="false" data-icon="false" data-divider-theme="b" id="keeperList">
+                        <!-- IN HERE THE LIST OF ALL THE KEEPERS WILL APPEAR -->
+                    </ul>
+            </ul>
+        </div>
+        <!--CONTENT END HERE-->
+        <!--popup-->
+        <div data-role='popup' id='popupDialog' data-theme='b'>
+         <div data-role='header' data-theme='b'>
+          <h1>App Info!</h1>
+         </div>
+         <div data-role='content' data-theme='b'>
+          <p> No more sweats over hectic way of jotting down rent history on a notebook.</p>
+          <p> Rent Management is a very simple, fast and easy to use application for your big and small rental property business.</p>
+          <p> Developed by: Sohaib Ahmed Mir - Twitter: <a href="#" style="color:#99cc00;" ><img src="img/twitter.png">@sohaib_mir</a> </p>
+          <p> Design Courtesy : http://nativedroid.godesign.ch/</p>
+          <div class='showastabs center nobg'>
+           <a href='#' data-rel='back' data-icon='ok' data-iconpos='left' data-role='button' data-inline='true'>Back</a>
+          </div>
+         </div>
+        </div>
+        <!--popup ends here -->
+        <!-- FOOTER -->    
+        <div data-position="fixed" data-tap-toggle="false" data-role="footer" data-tap-toggle="false" data-theme='b' style="bottom:0; position:absolute !important; top: auto !important; width:100%;">
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="#keeperForm" style="background: url(js/css/images/icons-png/plus-black.png) no-repeat center">Add New</a></li>
+                    <li><a href='#popupDialog' data-rel='popup' data-position-to='window' data-role='button' data-icon='external-link' data-transition='pop' data-inline='true' style="background: url(js/css/images/icons-png/info-black.png) no-repeat center">About App!</a></li>
+                </ul>
+            </div>
+        </div>
+        <!-- FOOTER END HERE-->  
+
+    </div>
+
+    <!--  DIV OF FORM STARTS HERE -->
+    <div data-role="page" data-theme='b' id="keeperForm">
+
+
+          <script type="text/javascript">
+          $('#keeperForm').on('pageshow',  function(){ 
+             document.addEventListener("backbutton", onBack, false);
+             function onBack(){
+                $.mobile.changePage('#keeperListPage');  
+                }
+            }
+ 
+    </script> 
+
+    <!-- HEADER STARTS HERE OF KEEPERFORM -->
+        <div data-role="header" data-position="fixed" data-tap-toggle="false" data-theme='b'>
+            <a href="#keeperListPage" ><i class="icon-ellipsis-vertical" style="float:left;"></i></a>
+            <h1>Add New Keeper</h1>
+        </div>
+        <div data-role="content">
+            <form method="POST" action="javascript: submitForm()" data-ajax="false" >
+                <ul data-role="listview" data-inset="true">
+                    <li data-role="fieldcontain">
+                    <!--    <label for="name2b">Name:</label> -->
+                        <input type="text" name="name2" id="name"   data-clear-btn="true" placeholder="Name">
+                    </li>
+                    <li data-role="fieldcontain">
+                    <!--    <label for="name2b">Phone:</label> -->
+                        <input type="number" name="name2" id="phoneNumber"  data-clear-btn="true" placeholder="Phone Number">
+                    </li>
+                    <li data-role="fieldcontain">
+                    <!--    <label for="name2b">Name:</label> -->
+                        <input type="number" name="name2" id="IDnumber"  data-clear-btn="true" placeholder="ID Card Number">
+                    </li>
+                    <li data-role="fieldcontain">
+                    <!--    <label for="name2b">Name:</label> -->
+                        <input type="number" name="name2" id="advaAmount"  data-clear-btn="true" placeholder="Advance amount">
+                    </li>                    
+                    <li data-role="fieldcontain">
+                    <!--    <label for="name2b">Name:</label> -->
+                        <input type="number" name="name2" id="advaPaid"  data-clear-btn="true" placeholder="Advance Amount Paid">
+                    </li>
+                    <li data-role="fieldcontain">
+                        <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
+                         <!--   <legend>Type</legend> -->
+                            <input type="radio" name="radio-choice-a" id="radio-choice-ab" value="Flat" checked="checked">
+                            <label for="radio-choice-ab">Flat</label>
+                            <input type="radio" name="radio-choice-a" id="radio-choice-bb" value="Shop">
+                            <label for="radio-choice-bb">Shop</label>
+                            <input type="radio" name="radio-choice-a" id="radio-choice-cb" value="Basement">
+                            <label for="radio-choice-cb">Basement</label>
+                        </fieldset>
+                    </li>
+
+                    <li data-role="fieldcontain">
+                    <!--    <label for="name2b">Name:</label> -->
+                        <input type="number" name="name2" id="typeNumber"  data-clear-btn="true" placeholder="Flat No. / Basement No. / Shop No">
+                    </li>
+
+                    <li data-role="fieldcontain">
+                    <!--    <label for="inputDate">Input type Date:</label> -->
+                        <input type="text" name="inputDate" id="contractDate" data-clear-btn="true" placeholder="Contract Signed Date">
+                    </li>
+                      <li data-role="fieldcontain">
+                    <!--    <label for="inputDate">Input type Date:</label> -->
+                        <input type="text" name="inputDate" id="contractEndDate" data-clear-btn="true" placeholder="Contract End Date">
+                    </li>
+
+                    <li data-role="fieldcontain">
+                    <!--    <label for="textarea2b">Textarea:</label> -->
+                    <textarea cols="40" rows="8" name="textarea2" id="comments" placeholder="Add Comments"></textarea>
+                    </li>
+
+                    <li>
+                        <fieldset class="ui-grid-a">
+                                <div class="ui-block-a"><input type="submit"  value="Save" style="width:95%"></div>
+                                <div class="ui-block-b"><input type="reset" value="Clear" style="width:95%"></div>
+                        </fieldset>
+                    </li>
+                </ul>
+            </form>
+            <script>
+                $( "#contractDate" ).datepicker();
+                $( "#contractEndDate" ).datepicker();
+            </script>
+
+        </div>
+    </div>
+
+<script>
+$("input[type='number']").each(function(i, el) {
+    el.type = "text";
+    el.onfocus = function(){this.type="number";};
+    el.onblur = function(){this.type="text";};
+});
+
+</script>
+    
+    </body>    
+</html>
